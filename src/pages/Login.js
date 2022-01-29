@@ -1,6 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import styles from  '../styles/Login.module.scss';
 
+
 function Login(){
+
+	const navigate = useNavigate();
+
 	return(
 		<div className={styles.Main}>
 			<div className={styles.background}>
@@ -16,7 +21,7 @@ function Login(){
 					</div>
 					<div className={styles.btnbox}>
 						<button>로그인</button>
-						<button onClick={()=>{}}>둘러보기</button>
+						<button onClick={()=>{navigate('/Main')}}>둘러보기</button>
 					</div>
 				</div>
 			</section>
