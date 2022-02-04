@@ -16,23 +16,37 @@
 
 		span {
 			position: absolute;
+			width: 3%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 3%;
 			height: 100%;
 			top: 0;
-			background-color:rgba(0, 0, 0, 0.224);
-
-			img{
+			background-color:rgba(0, 0, 0, 0.108);
+	
+			img{	
+				visibility: hidden;
 				width: 65%;
 			}
+		
 		}
 	}
 }
 
+
+.arrow_box:hover{
+	span{
+		background-color:rgba(0, 0, 0, 0.483);
+		img{
+			visibility: visible;
+		}
+	}
+}
+
+
 .left{
 	left: 0;
+	cursor: pointer;
 	img{
 		margin-right: 1vw;
 	}
@@ -40,11 +54,12 @@
 
 .right {
 	right: 0;
+	cursor: pointer;
 	img{
 		margin-left: 1vw;
 	}
-
 }
+
 
 
 .slide_box {
@@ -57,6 +72,7 @@
 		margin: 0;
 		padding: 0;
 		display: flex;
+		transition: ease 1s;
 	}
 }
 
@@ -64,11 +80,10 @@
 //16:9 비율 프레임 만들기
 
 .slide_card {
-	padding-left: 0.4vw;
+	padding: 0 0.2vw;
 	box-sizing: border-box;
 
 	.img_wrapper {
-		background-color: cadetblue;
 		position: relative;
 		height: 0;
 		padding-top: 56.25%;
