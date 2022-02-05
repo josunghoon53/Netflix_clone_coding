@@ -1,13 +1,16 @@
 .slide_comp {
 
 	.title_container {
+		position: relative;
 		margin-left: 3.2vw;
-
 		margin-bottom: 1.2vw;
 		div {
-			color: white;
-			font-size: 1.6vw;
+			color: rgb(236, 236, 236);
+			font-size: 1.4vw;
 		}
+
+
+	
 	}
 
 	.slide_container {
@@ -31,6 +34,8 @@
 		
 		}
 	}
+
+
 }
 
 
@@ -72,7 +77,6 @@
 		margin: 0;
 		padding: 0;
 		display: flex;
-		transition: ease 1s;
 	}
 }
 
@@ -83,16 +87,17 @@
 	padding: 0 0.2vw;
 	box-sizing: border-box;
 
+
 	.img_wrapper {
 		position: relative;
 		height: 0;
 		padding-top: 56.25%;
-
 		img {
 			position: absolute;
 			top: 0;
 			width: 100%;
 			height: 100%;
+			border-radius: 2px;
 			object-fit: cover;
 		}
 	}
