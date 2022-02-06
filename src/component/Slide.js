@@ -12,7 +12,14 @@ function Slide() {
 	const [current,setcurrent] = useState(0)
 
 	const [arrowbtn,setarrowbtn] = useState(false)
+	const [num,setnum] = useState();
+
 	let [slideOn,setslideon] = useState(0)
+	let [slidebar,setslidebar] =useState(0)
+	let [arrowon,setarrowon] =useState(0)
+
+	let [allsee,setallsee] =useState(0)
+	let [allseetitle,setallseetitle] = useState(0)
 
 	const li = useRef();
 	const ul = useRef();
@@ -42,6 +49,7 @@ function Slide() {
 
 
 
+
 	const resizeFuc = ()=>{
 		if(window.innerWidth>=1400) {
 			setslideCnt(6);
@@ -65,6 +73,13 @@ function Slide() {
 
 		setliwidth(100/slideCnt)
 
+		if((licount.length%slideCnt) == 0) {
+			setnum(parseInt(licount.length/slideCnt))
+		} else {
+			setnum(parseInt((licount.length/slideCnt)+1))
+		}
+
+	
 
 	}
 	
@@ -72,9 +87,7 @@ function Slide() {
 		if(slideOn === 0) {
 
 			if(dir == 'right'){
-
-			
-				if(licount.length+current-slideCnt > slideCnt){
+				if(licount.length+current-slideCnt > slideCnt || licount.length+current=== 2*slideCnt){
 					setcurrent(current-slideCnt)
 					setmoslide(moslide => moslide+ (move*(slideCnt)))
 				} else if(licount.length+current-slideCnt < slideCnt && licount.length+current-slideCnt !=0){
@@ -104,15 +117,13 @@ function Slide() {
 			}
 
 
-			ul.current.style.transition =  '0.7s ease'
-		
+			ul.current.style.transition =  '0.7s ease'		
 			setslideon(prev => prev+1);
 			setTimeout(()=>{
 
 				ul.current.style.transition =  'none'
 
 			},700)
-
 			setTimeout(()=>{setslideon(prev => prev-1)},770)
 		}
 		
@@ -123,12 +134,39 @@ function Slide() {
 
 
 	return (
-		<div className={styles.slide_comp}>
+		<div onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
 			<h2 onClick={()=>{console.log(current)}} className={styles.title_container}>
-				<div>내가 찜한 컨텐츠</div>
+				<div onMouseEnter={()=>{setallseetitle(1)}} onMouseLeave={()=>{setallseetitle(0)}} 
+					className={styles.title}>내가 찜한 컨텐츠
+					{allsee == 0 ? null 
+					:<div className={styles.allsee}>
+						{allseetitle == 0 ? null :
+						<div className={styles.allseetitle}>모두보기</div> 
+						}
+						<div className={styles.allseearrow}><img src='./img/right.png'/></div>
+					</div>}
+				</div>
+			
+		
+				{slidebar == 0 
+				? null
+				: <div className={styles.slidebar}>
+						{[...Array(num)].map((n, index) => {
+							let a = 0;
+							if(current%slideCnt !==0) a = parseInt(-current/slideCnt) + 1
+							else  a = parseInt(-current/slideCnt)
+    					return (<div key={index} className={
+								a == index ? styles.current : null
+							}/>)
+						})}
+					</div>
+				}	
 			</h2>
 	
-			<div className={styles.slide_container}>
+			<div onMouseOver={()=>{setslidebar(prev=>prev+1)
+														 setarrowon(prev =>prev+1)}} 
+					 onMouseOut={()=>{setslidebar(prev=>prev-1)
+														setarrowon(prev=>prev-1)}} className={styles.slide_container}>
 				<div className={styles.slide_box}>
 					<ul ref={ul} style={{width:`${newli.length * liwidth}%`, transform:`translateX(${moslide}%`}}>
 						{newli.map((el,idx)=>{
@@ -147,7 +185,7 @@ function Slide() {
 					:	<span onClick={()=>{
 							moveslide(100/newli.length,'left')
 							}} className={styles.left}>
-							<img src='./img/left.png'/>
+							<img className={arrowon===0? styles.img_hidden:null} src='./img/left.png'/>
 						</span>
 					}
 			
@@ -155,11 +193,10 @@ function Slide() {
 						setarrowbtn(true)
 						moveslide(-100/newli.length,'right')
 					})}  className={styles.right}>
-						<img src='./img/right.png'/>
+						<img className={arrowon===0?styles.img_hidden:null} src='./img/right.png'/>
 					</span>		
 				</div>
 			</div>	
-	
 		</div>
 		
 	)

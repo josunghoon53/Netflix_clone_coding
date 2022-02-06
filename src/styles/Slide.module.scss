@@ -1,15 +1,73 @@
 .slide_comp {
-
+	position: relative;
 	.title_container {
-		position: relative;
+		display: flex;
 		margin-left: 3.2vw;
 		margin-bottom: 1.2vw;
-		div {
+		
+		.title {
 			color: rgb(236, 236, 236);
 			font-size: 1.4vw;
+			display: flex;
+			
+			.allsee {
+				margin-left: 1vw;
+				display: flex;
+				align-items: center;
+				color: white;
+				.allseetitle {
+					font-size: 1vw;
+				}
+							
+				.allseearrow {
+					position: relative;
+					width: 1.1vw;
+					height: 1.2vw;
+					margin-left: 0.5vw;
+	
+					img {
+						position: absolute;
+						top: 0;
+						width: 100%;
+						height: 100%;
+	
+					}
+				}
+			}
+	
 		}
 
+		.title:hover{
+			cursor: pointer;
+			.allsee{
+				.allseearrow{
+					animation: arrow 1s ease;
+				}
 
+				.allseetitle {
+					animation: title 1s ease;
+				}
+			}
+		}
+
+		.slidebar {
+			position: absolute;
+			top: 1.5vw;
+			right: 1vw;
+			width: auto;
+			div{
+				background-color: rgb(69, 69, 69);
+				width:15px;
+				height: 3px;
+				margin: 0 1px;
+				float: left;
+
+			}
+			
+			.current {
+				background-color: rgb(0, 0, 0);
+			}
+		}
 	
 	}
 
@@ -25,10 +83,9 @@
 			justify-content: center;
 			height: 100%;
 			top: 0;
-			background-color:rgba(0, 0, 0, 0.108);
+			background-color:rgba(0, 0, 0, 0.387);
 	
 			img{	
-				visibility: hidden;
 				width: 65%;
 			}
 		
@@ -39,12 +96,15 @@
 }
 
 
+
+
+.img_hidden {
+	visibility: hidden;
+}
+
 .arrow_box:hover{
 	span{
-		background-color:rgba(0, 0, 0, 0.483);
-		img{
-			visibility: visible;
-		}
+		background-color:rgba(0, 0, 0, 0.673);
 	}
 }
 
@@ -101,4 +161,63 @@
 			object-fit: cover;
 		}
 	}
+}
+
+
+@media (max-width: 800px) {
+
+	.slide_comp {
+		
+		.title_container {
+			.title {
+				font-size: 14px;
+				.allsee {
+					.allseetitle {
+						font-size: 8px;
+					}
+					
+					.allseearrow {
+						width: 11px;
+						height: 10px;
+						margin-bottom: 0.5px;
+					}
+				}
+			}
+
+		
+		} 
+	}
+}
+
+
+
+@keyframes arrow{
+  from{
+		opacity: 0%;
+    left: -50px;
+  }
+  to{
+		opacity: 100%;
+    left: 0;
+  }
+}
+
+
+@keyframes title{
+  from{
+		opacity: 0%;
+    margin-left: -10px;
+  }
+  to{
+		opacity: 100%;
+  }
+}
+
+@keyframes fade-out{
+  from{
+		opacity: 1;
+  }
+  to{
+		opacity: 0;
+  }
 }
