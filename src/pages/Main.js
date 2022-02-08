@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Main.module.scss';
 import Slide from '../component/Slide';
+import HoverCard from '../component/HoverCard';
 function Main() {
 
 	const [scrolly,setscrolly] = useState(0);
@@ -59,7 +60,7 @@ function Main() {
 					<div style={{height:`${resize}px`}} className={styles.shadow}/>
 				</div>
 				<Slide/>
-				
+		
 				
 			</section>
 	

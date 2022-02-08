@@ -18,6 +18,7 @@
 				.allseetitle {
 					font-size: 1vw;
 				}
+
 							
 				.allseearrow {
 					position: relative;
@@ -49,6 +50,8 @@
 				}
 			}
 		}
+
+	
 
 		.slidebar {
 			position: absolute;
@@ -92,10 +95,7 @@
 		}
 	}
 
-
 }
-
-
 
 
 .img_hidden {
@@ -163,6 +163,12 @@
 	}
 }
 
+.slide_card:hover{
+	cursor: pointer;
+	z-index: 100;
+	left: 0;
+}
+
 
 @media (max-width: 800px) {
 
@@ -213,7 +219,7 @@
   }
 }
 
-@keyframes fade-out{
+@keyframes fadeout{
   from{
 		opacity: 1;
   }

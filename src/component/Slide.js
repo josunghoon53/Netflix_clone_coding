@@ -1,13 +1,16 @@
-
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Slide.module.scss';
+import HoverCard from './HoverCard';
+
+
 function Slide() {
 
-	const [licount,setlicount] = useState([1,2,3,4,5,6,3]);
+	const [licount,setlicount] = useState([1,2,3,4,5,6]);
 	const [newli,setnewli] = useState([]);
 	const [slideCnt,setslideCnt] = useState();
 	const [liwidth,setliwidth] = useState();
 	const [moslide,setmoslide] = useState(0);
+	const [ulwidth,setulwidth] = useState();
 
 	const [current,setcurrent] = useState(0)
 
@@ -17,12 +20,15 @@ function Slide() {
 	let [slideOn,setslideon] = useState(0)
 	let [slidebar,setslidebar] =useState(0)
 	let [arrowon,setarrowon] =useState(0)
+	let [hovcard,sethovcard] =useState(0)
+	let [btnhidden,setbtnhidden]= useState(0)
 
 	let [allsee,setallsee] =useState(0)
 	let [allseetitle,setallseetitle] = useState(0)
 
 	const li = useRef();
 	const ul = useRef();
+	const box = useRef();
 
 	useEffect(()=>{
 		resizeFuc();
@@ -31,8 +37,13 @@ function Slide() {
 	})
 
 	useEffect(()=>{
-		setnewli([...licount,...licount,...licount]);
-	},[])
+		if(licount.length <= slideCnt){
+			setnewli(licount);
+		} else {
+			setnewli([...licount,...licount,...licount]);
+		}
+	
+	},[slideCnt])
 
 	
 	useEffect(()=>{
@@ -48,11 +59,10 @@ function Slide() {
 	},[moslide])
 
 
-
-
 	const resizeFuc = ()=>{
 		if(window.innerWidth>=1400) {
 			setslideCnt(6);
+
 		} 
 		else if(window.innerWidth>=1100) {
 			setslideCnt(5);
@@ -73,12 +83,24 @@ function Slide() {
 
 		setliwidth(100/slideCnt)
 
+		//슬라이드바
 		if((licount.length%slideCnt) == 0) {
 			setnum(parseInt(licount.length/slideCnt))
 		} else {
 			setnum(parseInt((licount.length/slideCnt)+1))
 		}
 
+		if(newli.length > 6){
+			setulwidth(newli.length*liwidth)
+			setbtnhidden(1)
+		} else {
+			setbtnhidden(0)
+			setulwidth(slideCnt*liwidth)
+			ul.current.style.transform = 'translateX(0px)' 
+			
+		}
+
+	
 	
 
 	}
@@ -148,7 +170,7 @@ function Slide() {
 				</div>
 			
 		
-				{slidebar == 0 
+				{slidebar == 0 || btnhidden ===0
 				? null
 				: <div className={styles.slidebar}>
 						{[...Array(num)].map((n, index) => {
@@ -167,34 +189,40 @@ function Slide() {
 														 setarrowon(prev =>prev+1)}} 
 					 onMouseOut={()=>{setslidebar(prev=>prev-1)
 														setarrowon(prev=>prev-1)}} className={styles.slide_container}>
-				<div className={styles.slide_box}>
-					<ul ref={ul} style={{width:`${newli.length * liwidth}%`, transform:`translateX(${moslide}%`}}>
+				<div ref={box} className={styles.slide_box}>
+					<ul ref={ul} style={{width:`${ulwidth}%`, transform:`translateX(${moslide}%`}}>
 						{newli.map((el,idx)=>{
 							return(
-								<li ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
+								<li onMouseEnter={()=>{sethovcard(idx+1)}} 
+										onMouseLeave={()=>{sethovcard(0)}}
+								 ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
 									<div className={styles.img_wrapper}>
 										<img src={`./img/test/test${el}.jpg`}/>
-									</div>
+										{hovcard == idx+1 ? <HoverCard/> : null}
+									</div>								
 								</li>
 							)
 						})}
 					</ul>
 				</div>
 				<div className={styles.arrow_box}>
-					{arrowbtn === false ? null 
+					
+					{arrowbtn === false || btnhidden===0 ? null 
 					:	<span onClick={()=>{
 							moveslide(100/newli.length,'left')
 							}} className={styles.left}>
 							<img className={arrowon===0? styles.img_hidden:null} src='./img/left.png'/>
 						</span>
 					}
-			
-					<span onClick={(()=>{
-						setarrowbtn(true)
-						moveslide(-100/newli.length,'right')
-					})}  className={styles.right}>
-						<img className={arrowon===0?styles.img_hidden:null} src='./img/right.png'/>
-					</span>		
+
+					{btnhidden ===0 ?null :
+						<span onClick={(()=>{
+							setarrowbtn(true)
+							moveslide(-100/newli.length,'right')
+							})}  className={styles.right}>
+							<img className={arrowon===0?styles.img_hidden:null} src='./img/right.png'/>
+						</span>	
+					 }
 				</div>
 			</div>	
 		</div>
