@@ -5,7 +5,7 @@ import HoverCard from './HoverCard';
 
 function Slide() {
 
-	const [licount,setlicount] = useState([1,2,3,4,5,6]);
+	const [licount,setlicount] = useState([1,2,3]);
 	const [newli,setnewli] = useState([]);
 	const [slideCnt,setslideCnt] = useState();
 	const [liwidth,setliwidth] = useState();
@@ -198,7 +198,8 @@ function Slide() {
 								 ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
 									<div className={styles.img_wrapper}>
 										<img src={`./img/test/test${el}.jpg`}/>
-										{hovcard == idx+1 ? <HoverCard/> : null}
+										{hovcard == idx+1 ? <HoverCard hovcard = {hovcard} newli = {newli}
+										slideCnt = {slideCnt} box = {box}/> : null}
 									</div>								
 								</li>
 							)
