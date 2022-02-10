@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Slide.module.scss';
 import HoverCard from './HoverCard';
-
+import api from '../Api';
 
 function Slide() {
 
-	const [licount,setlicount] = useState([1,2,3]);
+	const [licount,setlicount] = useState([]);
 	const [newli,setnewli] = useState([]);
 	const [slideCnt,setslideCnt] = useState();
 	const [liwidth,setliwidth] = useState();
@@ -151,13 +151,20 @@ function Slide() {
 		
 	}
 	
+	useEffect(()=>{
+		let copy = [];
+		api.get('/movie/popular')
+		.then((result)=>{result.data.results.map((el,idx)=>{
+			copy.push(el.backdrop_path);
+		})})
 
-
+		setlicount(copy);
+	},[])
 
 
 	return (
 		<div onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
-			<h2 onClick={()=>{console.log(current)}} className={styles.title_container}>
+			<h2 onClick={()=>{console.log(licount)}} className={styles.title_container}>
 				<div onMouseEnter={()=>{setallseetitle(1)}} onMouseLeave={()=>{setallseetitle(0)}} 
 					className={styles.title}>내가 찜한 컨텐츠
 					{allsee == 0 ? null 
@@ -192,12 +199,13 @@ function Slide() {
 				<div ref={box} className={styles.slide_box}>
 					<ul ref={ul} style={{width:`${ulwidth}%`, transform:`translateX(${moslide}%`}}>
 						{newli.map((el,idx)=>{
+
 							return(
 								<li onMouseEnter={()=>{sethovcard(idx+1)}} 
 										onMouseLeave={()=>{sethovcard(0)}}
 								 ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
 									<div className={styles.img_wrapper}>
-										<img src={`./img/test/test${el}.jpg`}/>
+										<img src={`https://image.tmdb.org/t/p/original${el}`}/>
 										{hovcard == idx+1 ? <HoverCard hovcard = {hovcard} newli = {newli}
 										slideCnt = {slideCnt} box = {box}/> : null}
 									</div>								
