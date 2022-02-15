@@ -125,7 +125,30 @@
 		margin: 0 auto;
 		height: 100%;
 		width: 1000px;
-		background-color: rgba(101, 101, 174, 0.517);
-		margin: 0 auto
+		padding: 0 50px;
+		padding-top: 30px;
+		padding-bottom: 50px;
+		background-color: rgba(0, 0, 0, 0.517);
+		margin: 0 auto;
+
+		.footer_menu {
+			list-style: none;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			line-height: 40px;
+			padding-left: 0;
+			margin-top: 35px;
+
+			li {
+				margin-right: 50px;
+			}
+		}
+
+		.footer_info {
+			font-size: 12px;
+			line-height: 16px;
+			margin-top: 30px;
+		}
 
 }
+

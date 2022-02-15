@@ -1,3 +1,5 @@
+
+
 //헤더
 header {
 	position: absolute;
@@ -11,12 +13,17 @@ header {
 	transition: 1s ease-in-out;
 	overflow: hidden;
 	.title{
-		color: red;
-		font-size: 150%;
-		font-weight: bold;
-		margin-left: 10px;
-		margin-top: 10px;
-		margin-right: 20px;
+		width: 100px;
+		height: 50px;
+		margin-top: 13px;
+		margin-left: 2.8vw;
+		margin-right: 5vw;
+
+		img{
+			object-fit: cover;
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 	.menu {
@@ -108,6 +115,5 @@ section {
 	}
 	
 }
-
 
 

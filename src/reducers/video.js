@@ -1,8 +1,8 @@
 /* ----------------- 액션 타입 ------------------------ */
 
-export const MOVIE_REQUEST =  'movie/MOVIE_REQUEST'; 
-export const MOVIE_SUCCESS =  'movie/MOVIE_SUCCESS'; 
-export const MOVIE_FAILURE =  'movie/MOVIE_FAILURE'; 
+export const VIDEO_REQUEST =  'video/VIDEO_REQUEST'; 
+export const VIDEO_SUCCESS =  'video/VIDEO_SUCCESS'; 
+export const VIDEO_FAILURE =  'video/VIDEO_FAILURE'; 
 
 
 /* ----------------- 액션 생성 함수 -------------------- */
@@ -12,18 +12,17 @@ export const MOVIE_FAILURE =  'movie/MOVIE_FAILURE';
 
 /* ----------------- 모듈의 초기 상태 ------------------ */
 
-const movieState = [];
+const videoState = [];
 
 /* ----------------- 리듀서 ---------------------------- */
 
-export default function movie (state = movieState,action) {
+export default function video (state = videoState,action) {
 
 	switch(action.type) {
 
-		case MOVIE_SUCCESS:
+		case VIDEO_SUCCESS:
 			return state = action.payload;
-			
-		case MOVIE_FAILURE:
+		case VIDEO_FAILURE:
 			return state;
 
 

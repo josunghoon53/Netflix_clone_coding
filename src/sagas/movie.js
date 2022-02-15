@@ -1,13 +1,21 @@
-import {takeEvery} from 'redux-saga/effects'
-import {MOVIE_REQUEST} from '../reducers/movie'
+import {call, put, takeEvery} from 'redux-saga/effects'
+import { movieData } from '../Api';
 
-function* loadmovie() {
+import {MOVIE_FAILURE, MOVIE_REQUEST, MOVIE_SUCCESS} from '../reducers/movie'
 
+const movieAPI= () =>{
+
+	return movieData.popular();
+}
+
+
+function* loadmovie(action) {
+  const moviedata = yield call(movieAPI,action.payload);
   try {
-    
+    yield put({type:MOVIE_SUCCESS, payload : moviedata.data.results})
    
   } catch (e) {
-    
+    yield put({type:MOVIE_FAILURE})
   }
 }
 
@@ -16,5 +24,6 @@ function* loadmovie() {
 export default function* movieSaga () {
   
   yield takeEvery(MOVIE_REQUEST,loadmovie)
+
   
 }

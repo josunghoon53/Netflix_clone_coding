@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Slide.module.scss';
 import HoverCard from './HoverCard';
-import api from '../Api';
+import api, { movieData } from '../Api';
+import { useDispatch, useSelector } from 'react-redux';
 
-function Slide() {
+function Slide(props) {
 
 	const [licount,setlicount] = useState([]);
 	const [newli,setnewli] = useState([]);
@@ -25,10 +26,13 @@ function Slide() {
 
 	let [allsee,setallsee] =useState(0)
 	let [allseetitle,setallseetitle] = useState(0)
+	let video  =  useSelector((state)=> state.video);
 
+	const dispatch = useDispatch();
 	const li = useRef();
 	const ul = useRef();
 	const box = useRef();
+
 
 	useEffect(()=>{
 		resizeFuc();
@@ -37,15 +41,18 @@ function Slide() {
 	})
 
 	useEffect(()=>{
-		if(licount.length <= slideCnt){
-			setnewli(licount);
+		setlicount([...props.movie])
+		if(props.movie.length <= slideCnt){
+			setnewli([...props.movie]);
 		} else {
-			setnewli([...licount,...licount,...licount]);
+			setnewli([...props.movie,...props.movie,...props.movie]);
 		}
-	
-	},[slideCnt])
+		
+	},[props.movie])
 
-	
+
+
+
 	useEffect(()=>{
 		setTimeout(()=>{
 			if(moslide < 0 && moslide > -33.3333){
@@ -62,7 +69,6 @@ function Slide() {
 	const resizeFuc = ()=>{
 		if(window.innerWidth>=1400) {
 			setslideCnt(6);
-
 		} 
 		else if(window.innerWidth>=1100) {
 			setslideCnt(5);
@@ -150,21 +156,14 @@ function Slide() {
 		}
 		
 	}
+
 	
-	useEffect(()=>{
-		let copy = [];
-		api.get('/movie/popular')
-		.then((result)=>{result.data.results.map((el,idx)=>{
-			copy.push(el.backdrop_path);
-		})})
 
-		setlicount(copy);
-	},[])
-
+	
 
 	return (
 		<div onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
-			<h2 onClick={()=>{console.log(licount)}} className={styles.title_container}>
+			<h2 onClick={()=>{console.log(props.movie)}} className={styles.title_container}>
 				<div onMouseEnter={()=>{setallseetitle(1)}} onMouseLeave={()=>{setallseetitle(0)}} 
 					className={styles.title}>내가 찜한 컨텐츠
 					{allsee == 0 ? null 
@@ -172,10 +171,10 @@ function Slide() {
 						{allseetitle == 0 ? null :
 						<div className={styles.allseetitle}>모두보기</div> 
 						}
-						<div className={styles.allseearrow}><img src='./img/right.png'/></div>
+						<div className={styles.allseearrow}><img src='../img/right.png'/></div>
 					</div>}
 				</div>
-			
+					
 		
 				{slidebar == 0 || btnhidden ===0
 				? null
@@ -198,21 +197,25 @@ function Slide() {
 														setarrowon(prev=>prev-1)}} className={styles.slide_container}>
 				<div ref={box} className={styles.slide_box}>
 					<ul ref={ul} style={{width:`${ulwidth}%`, transform:`translateX(${moslide}%`}}>
-						{newli.map((el,idx)=>{
-
-							return(
-								<li onMouseEnter={()=>{sethovcard(idx+1)}} 
+						{newli.map((el,idx)=>{ 
+							return(	
+								<li onMouseEnter={()=>{sethovcard(idx+1)
+									dispatch({type:'video/VIDEO_REQUEST', payload:el.id})}} 
 										onMouseLeave={()=>{sethovcard(0)}}
 								 ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
-									<div className={styles.img_wrapper}>
-										<img src={`https://image.tmdb.org/t/p/original${el}`}/>
-										{hovcard == idx+1 ? <HoverCard hovcard = {hovcard} newli = {newli}
-										slideCnt = {slideCnt} box = {box}/> : null}
-									</div>								
+										<div className={styles.img_wrapper}>
+											<img className={styles.slideImg} src={`https://image.tmdb.org/t/p/w500${el.backdrop_path}`}/>
+											{hovcard == idx+1 ? <HoverCard video = {video} 
+											setdetailcard={props.setdetailcard}
+											genres={props.genres} slideCnt = {slideCnt}
+											current={current} licount={licount} el={el} /> : null}
+										</div>	
 								</li>
 							)
 						})}
 					</ul>
+
+					
 				</div>
 				<div className={styles.arrow_box}>
 					
@@ -220,7 +223,7 @@ function Slide() {
 					:	<span onClick={()=>{
 							moveslide(100/newli.length,'left')
 							}} className={styles.left}>
-							<img className={arrowon===0? styles.img_hidden:null} src='./img/left.png'/>
+							<img className={arrowon===0? styles.img_hidden:null} src='../img/left.png'/>
 						</span>
 					}
 
@@ -229,7 +232,7 @@ function Slide() {
 							setarrowbtn(true)
 							moveslide(-100/newli.length,'right')
 							})}  className={styles.right}>
-							<img className={arrowon===0?styles.img_hidden:null} src='./img/right.png'/>
+							<img className={arrowon===0?styles.img_hidden:null} src='../img/right.png'/>
 						</span>	
 					 }
 				</div>
@@ -237,6 +240,8 @@ function Slide() {
 		</div>
 		
 	)
+
+
 }				
 
 

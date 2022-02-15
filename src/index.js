@@ -1,22 +1,28 @@
+import './index.css';
+import 'normalize.css';
+import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'normalize.css';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
-import { applyMiddleware, compose, createStore } from 'redux';
 import rootSaga from './sagas';
 import createSagaMiddleware from 'redux-saga'
-
+import { applyMiddleware, compose, createStore } from 'redux';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(rootReducer,
   compose(applyMiddleware(sagaMiddleware)))
-
   sagaMiddleware.run(rootSaga);
+
+
+document.cookie = 'safeCookie1=foo;SameSite=None;Secure';
+document.cookie = 'safeCookie2=foo;SameSite=None;Secure';
+document.cookie = 'crossCookie=bar;SameSite=None;Secure';
+
+
+
 
 
 ReactDOM.render(
