@@ -1,7 +1,7 @@
 import './App.css';
 import Login from './pages/Login';
 import Main from './pages/Main'
-import {Routes,Route} from 'react-router-dom'
+import {Routes,Route, Outlet} from 'react-router-dom'
 import DetailCard from './component/DetailCard';
 
 function App() {
@@ -11,7 +11,6 @@ function App() {
       <Route path = '/Main/*' element={<Main/>}>
         <Route path = ':id' element={<DetailCard/>}/>
       </Route>
-      
     </Routes>
   );
 }

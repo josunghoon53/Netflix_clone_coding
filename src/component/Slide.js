@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Slide.module.scss';
 import HoverCard from './HoverCard';
-import api, { movieData } from '../Api';
+import {movieData } from '../Api';
 import { useDispatch, useSelector } from 'react-redux';
+import video from '../reducers/video';
 
 function Slide(props) {
 
@@ -26,14 +27,20 @@ function Slide(props) {
 
 	let [allsee,setallsee] =useState(0)
 	let [allseetitle,setallseetitle] = useState(0)
-	let video  =  useSelector((state)=> state.video);
 
+	const [zindex,setzindex] = useState(); 
+	const [timer,settimer] = useState();
+
+	let video  =  useSelector((state)=> state.video);
 	const dispatch = useDispatch();
 	const li = useRef();
 	const ul = useRef();
 	const box = useRef();
 
+	const [Category,setCategory] = useState(['지금 인기 있는 영화','한국tv프로그램','해외영화'])
 
+	
+	
 	useEffect(()=>{
 		resizeFuc();
 		window.addEventListener('resize',resizeFuc);
@@ -50,8 +57,14 @@ function Slide(props) {
 		
 	},[props.movie])
 
-
-
+	useEffect(()=>{
+		if(props.movie.length <= slideCnt){
+			setnewli([...props.movie]);
+		} else {
+			setnewli([...props.movie,...props.movie,...props.movie]);
+		}
+		
+	},[slideCnt])
 
 	useEffect(()=>{
 		setTimeout(()=>{
@@ -64,6 +77,7 @@ function Slide(props) {
 			}
 		},700)
 	},[moslide])
+
 
 
 	const resizeFuc = ()=>{
@@ -86,9 +100,7 @@ function Slide(props) {
 			setslideCnt(2);
 		} 
 
-
 		setliwidth(100/slideCnt)
-
 		//슬라이드바
 		if((licount.length%slideCnt) == 0) {
 			setnum(parseInt(licount.length/slideCnt))
@@ -105,10 +117,6 @@ function Slide(props) {
 			ul.current.style.transform = 'translateX(0px)' 
 			
 		}
-
-	
-	
-
 	}
 	
 	const moveslide = (move,dir) =>{
@@ -157,15 +165,12 @@ function Slide(props) {
 		
 	}
 
-	
-
-	
 
 	return (
-		<div onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
+		<div style={{zIndex:`${zindex}`}} onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
 			<h2 onClick={()=>{console.log(props.movie)}} className={styles.title_container}>
 				<div onMouseEnter={()=>{setallseetitle(1)}} onMouseLeave={()=>{setallseetitle(0)}} 
-					className={styles.title}>내가 찜한 컨텐츠
+					className={styles.title}>{Category[props.type-1]}
 					{allsee == 0 ? null 
 					:<div className={styles.allsee}>
 						{allseetitle == 0 ? null :
@@ -199,15 +204,21 @@ function Slide(props) {
 					<ul ref={ul} style={{width:`${ulwidth}%`, transform:`translateX(${moslide}%`}}>
 						{newli.map((el,idx)=>{ 
 							return(	
-								<li onMouseEnter={()=>{sethovcard(idx+1)
-									dispatch({type:'video/VIDEO_REQUEST', payload:el.id})}} 
-										onMouseLeave={()=>{sethovcard(0)}}
+								<li onMouseEnter={()=>{settimer(setTimeout(()=>{sethovcard(idx+1)
+								},500))
+									setzindex(100)}} 
+										onMouseLeave={()=>{sethovcard(0)
+											clearTimeout(timer)
+											setzindex(0)}}
 								 ref={li} key={idx} style={{width:`${liwidth}%`}} className={styles.slide_card}>
 										<div className={styles.img_wrapper}>
 											<img className={styles.slideImg} src={`https://image.tmdb.org/t/p/w500${el.backdrop_path}`}/>
-											{hovcard == idx+1 ? <HoverCard video = {video} 
+											{hovcard == idx+1 ? 
+											<HoverCard
+											type = {props.type}
+											video = {video}
 											setdetailcard={props.setdetailcard}
-											genres={props.genres} slideCnt = {slideCnt}
+											genre={props.genre} slideCnt = {slideCnt}
 											current={current} licount={licount} el={el} /> : null}
 										</div>	
 								</li>

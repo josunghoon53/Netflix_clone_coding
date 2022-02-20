@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
+import ReactPlayer from 'react-player';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styles from  '../styles/Hovercard.module.scss';
 import DetailCard from './DetailCard';
 
 function HoverCard(props){
 
+	const dispatch = useDispatch();
 	const [x,setx] = useState(0);
 	const [num,setnum] = useState(0);
 	const background = useRef();
 	const [genr,setgenr] = useState([]);
 	const navigate = useNavigate()
+
+	const [play,setplay] = useState(true);
+	const [addr,setaddr] = useState([])
+
+
+	
+	let info =  useSelector((state)=> state.movie.detailInfo);
 
 	useEffect(()=>{
 		for(let i=0;i<props.licount.length;i++){
@@ -33,10 +43,17 @@ function HoverCard(props){
 		}
 	},[num])
 
+	useEffect(()=>{
+		if(props.type == 1)
+		dispatch({type:`movie/UNIT_REQUEST`, payload : props.el.id})
+		if(props.type == 2)
+		dispatch({type:`tv/DETAIL_REQUEST`, payload : props.el.id})
+	})
+
 
 	useEffect(()=>{
 		let copy = [];
-		props.genres.map((el)=>{
+		props.genre.map((el)=>{
 			if(props.el.genre_ids.includes(el.id) == true){
 				copy.push(el.name);
 			}	
@@ -46,18 +63,24 @@ function HoverCard(props){
 
 
 
+
+
 	return(
+		
 		<div ref={background} style={{
 								opacity:'1',
 								transform: `scale(1.5) translateX(${x}%)`}}
-	 							className={styles.background}>
+	 							className={styles.background} >
 
+			
+		
 			<div className={styles.hoverimg}>
-				<img className='hov' src={`https://image.tmdb.org/t/p/w500${props.el.backdrop_path}`}/>
+				<img src={`https://image.tmdb.org/t/p/w500${props.el.backdrop_path}`}/>	
 			</div>	
 
 			<div className={styles.btn}>
-				<div className={styles.play}>
+				
+				<div onClick={()=>{console.log(info)}} className={styles.play}>
 					<img src='../img/btn_play.png'/>
 				</div>
 				<div className={styles.add}>
@@ -70,12 +93,14 @@ function HoverCard(props){
 					<img src='../img/btn_hate.png'/>
 				</div>
 				<div onClick={()=>{
-					navigate('/Main/1');
+					props.setdetailcard(true);
+				
+					navigate(`/Main/${props.el.id}`,{state: {genr : genr, type: props.type}});
 				}} className={styles.detail}>
 					<img src='../img/btn_detail.png'/>
 				</div>
-			</div>			
-
+			</div>	
+					
 			<ul className={styles.genres}>
 				{genr.map((el,idx)=>{
 					return(
@@ -83,6 +108,7 @@ function HoverCard(props){
 					)
 				})}
 			</ul>	
+
 		</div>
 	)
 }

@@ -17,16 +17,30 @@ function Main(props) {
 
   const dispatch = useDispatch();
 	const main =useRef();
-	let movie  =  useSelector((state)=> state.movie);
-	let genres  =  useSelector((state)=> state.genres);
+	const section = useRef();
+	const header =useRef();
 
-  useEffect(()=>{
-    dispatch({type: 'movie/MOVIE_REQUEST'});
-		dispatch({type:'genres/GENRES_REQUEST'})
-  },[])
-
+	let movie  =  useSelector((state)=> state.movie.movieInfo);
+	let genre =  useSelector((state)=> state.movie.genreInfo);
+	let tv  =  useSelector((state)=> state.tv);
 
 	
+	let tv_genre  =  useSelector((state)=> state.tv_genre);
+
+
+
+
+
+  useEffect(()=>{
+
+    dispatch({type: 'movie/MOVIE_REQUEST'});
+
+	
+		dispatch({type:'tv/GENRES_REQUEST'})
+		dispatch({type: 'tv/TV_REQUEST',payload :1});
+		dispatch({type: 'tv/TV_REQUEST',payload :2});
+		dispatch({type: 'tv/TV_REQUEST',payload :3});
+  },[])
 
 	useEffect(()=>{
 		if(window.innerWidth>=885){
@@ -42,6 +56,20 @@ function Main(props) {
 		};
 	})
 
+
+	useEffect(()=>{
+		if(scrolly !== 0)
+		header.current.style = `
+			top : 0px;
+			position : fixed;
+			background-color : black;
+			transition: 1s ease-in-out;
+		`
+		return(()=>{
+			header.current.style = `
+		`
+		})
+	})
 	
 
 	const resizeFuc=()=>{
@@ -49,7 +77,9 @@ function Main(props) {
 	}
 
 	const ScrollFuc=()=>{
-		setscrolly(window.scrollY);
+		detailcard == false	
+		? setscrolly(window.scrollY)
+		: setscrolly(scrolly)
 	}
 
 	
@@ -57,9 +87,17 @@ function Main(props) {
 	return(
 		
 		<div ref={main} className={styles.main}>
-			<Outlet/>
+			<Routes>
+  			<Route path=":id" element={<DetailCard
+				 section = {section}
+				 resize = {resize}
+				 detailcard = {detailcard}
+				 setdetailcard = {setdetailcard}
+				 scrolly = {scrolly}
+				 setscrolly = {setscrolly} main={main} />}/>
+			</Routes>
 			{modalOn === true ? null : <MenuModal menulist={menulist}/>}
-			<header className={scrolly===0 ? null : styles.header_scroll} >
+			<header ref={header}>
 				<div className={styles.title}>
 					<img src='../img/Netflix_Logo_RGB.png'/>
 				</div>
@@ -80,9 +118,12 @@ function Main(props) {
 					<img src='../img/test.jpg'/>
 					<div style={{height:`${resize}px`}} className={styles.shadow}/>
 				</div>
-				<Slide setdetailcard={setdetailcard} genres = {genres} movie = {movie}/>
+				<div>
+				<Slide type = {1} setdetailcard={setdetailcard} genre = {genre}  movie = {movie}/>
+				<Slide type = {2} setdetailcard={setdetailcard} genre = {genre}  movie = {tv}/>
+			
+				</div>
 			</section>
-			<footer></footer>
 		</div>
 
 	)

@@ -1,11 +1,11 @@
 import { call,put, takeEvery } from "redux-saga/effects";
-import { movieData } from "../Api";
-import { GENRES_FAILURE, GENRES_REQUEST, GENRES_SUCCESS } from "../reducers/genres";
-import { MOVIE_SUCCESS } from "../reducers/movie";
+import { tvData } from "../Api";
+import { GENRES_FAILURE, GENRES_REQUEST, GENRES_SUCCESS } from "../reducers/tv_genre";
+
 
 
 const genresAPI= () => {
-	return movieData.genre();
+	return tvData.genre();
 }
 
 
