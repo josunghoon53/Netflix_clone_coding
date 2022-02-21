@@ -1,12 +1,4 @@
-# NETFLIX CLONE SITE
-
-
-[넷플릭스_데모_사이트][link]
-
-[link]: https://neflix-clonecoding.firebaseapp.com/
-
-
-### OTT 서비스 제공 사이트 NETFLIX 클론 프로젝트
+### NETFLIX 클론 프로젝트
 
 ## [사이트 미리보기][link]
 
