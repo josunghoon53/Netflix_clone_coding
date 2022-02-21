@@ -1,5 +1,4 @@
 # NETFLIX DEMO SITE 
 
 
-Open [https://neflix-clonecoding.firebaseapp.com/]
-
+[link]: https://neflix-clonecoding.firebaseapp.com/
