@@ -2,26 +2,27 @@ import {call, put, takeEvery} from 'redux-saga/effects'
 import { movieData } from '../Api';
 
 import {MOVIE_FAILURE, MOVIE_REQUEST,UNIT_REQUEST,
-MOVIE_INFO,GENRE_INFO, DETAIL_INFO, PERSON_INFO,SIMILAR_INFO} from '../reducers/movie'
+GENRE_INFO, DETAIL_INFO, PERSON_INFO,SIMILAR_INFO,DISCOVER_INFO} from '../reducers/movie'
 
 
 
 const API = {
-  movieAPI :  (page)=>{return movieData.popular(page)},
+  discoverAPI : (url) =>{return movieData.discover(url)},
   genreAPI : ()=>{return movieData.genre()},
   detailAPI : (id)=>{return movieData.detail(id)},
   personAPI : (id) =>{return movieData.person(id)},
-  similarAPI : (id) =>{return movieData.similar(id)}
+  similarAPI : (id) =>{return movieData.similar(id)},
 }
 
 
 
 //전체영화 데이터 및 장르 
 function* loadmovie(action) {
-  const moviedata = yield call(API.movieAPI,action.payload);
   const genredata = yield call (API.genreAPI,action.payload);
+  const discoverdata = yield call (API.discoverAPI,action.url);
   try {
-    yield put({type:MOVIE_INFO, payload : moviedata.data.results});;
+    yield put({type:DISCOVER_INFO, payload : 
+      {data : discoverdata.data.results, url : action.url}});
     yield put({type:GENRE_INFO, payload : genredata.data.genres});
   } catch (e) {
     yield put({type:MOVIE_FAILURE});

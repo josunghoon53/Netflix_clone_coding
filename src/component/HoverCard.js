@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styles from  '../styles/Hovercard.module.scss';
-import DetailCard from './DetailCard';
+
 
 function HoverCard(props){
 
@@ -12,14 +11,24 @@ function HoverCard(props){
 	const [num,setnum] = useState(0);
 	const background = useRef();
 	const [genr,setgenr] = useState([]);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
+	const [btncolor,setbtncolor] = useState();
 
-	const [play,setplay] = useState(true);
-	const [addr,setaddr] = useState([])
+	let detail = useSelector((state)=> 
+		props.type === 1? state.movie.detailInfo : state.tv.detailInfo
+	);
 
+
+	let person = useSelector((state)=> 
+		props.type === 1? state.movie.personInfo : state.tv.personInfo
+	);
+
+
+	let similar = useSelector((state)=> 
+		props.type === 1? state.movie.similarInfo : state.tv.similarInfo
+	);
 
 	
-	let info =  useSelector((state)=> state.movie.detailInfo);
 
 	useEffect(()=>{
 		for(let i=0;i<props.licount.length;i++){
@@ -47,8 +56,8 @@ function HoverCard(props){
 		if(props.type == 1)
 		dispatch({type:`movie/UNIT_REQUEST`, payload : props.el.id})
 		if(props.type == 2)
-		dispatch({type:`tv/DETAIL_REQUEST`, payload : props.el.id})
-	})
+		dispatch({type:`tv/UNIT_REQUEST`, payload : props.el.id})
+	},[dispatch])
 
 
 	useEffect(()=>{
@@ -61,9 +70,13 @@ function HoverCard(props){
 		setgenr(copy);
 	},[])
 
+	const onColor = () =>{
+		setbtncolor('rgba(255, 255, 255, 0.72)')
+	}
 
-
-
+	const offColor = () =>{
+		setbtncolor('')
+	}
 
 	return(
 		
@@ -71,36 +84,33 @@ function HoverCard(props){
 								opacity:'1',
 								transform: `scale(1.5) translateX(${x}%)`}}
 	 							className={styles.background} >
-
-			
-		
 			<div className={styles.hoverimg}>
 				<img src={`https://image.tmdb.org/t/p/w500${props.el.backdrop_path}`}/>	
 			</div>	
 
-			<div className={styles.btn}>
-				
-				<div onClick={()=>{console.log(info)}} className={styles.play}>
-					<img src='../img/btn_play.png'/>
+			<div className={styles.btn}>		
+				<div onClick={()=>{}} className={styles.play}>
+					<img src={process.env.PUBLIC_URL + '/img/btn_play.png'}/>
 				</div>
 				<div className={styles.add}>
-					<img src='../img/btn_add.png'/>
+					<img src={process.env.PUBLIC_URL + '/img/btn_add.png'}/>
 				</div>
 				<div className={styles.good}>
-					<img src='../img/btn_like.png'/>
+					<img src={process.env.PUBLIC_URL + '/img/btn_like.png'}/>
 				</div>
 				<div className={styles.bad}>
-					<img src='../img/btn_hate.png'/>
+					<img src={process.env.PUBLIC_URL + '/img/btn_hate.png'}/>
 				</div>
 				<div onClick={()=>{
 					props.setdetailcard(true);
-				
-					navigate(`/Main/${props.el.id}`,{state: {genr : genr, type: props.type}});
-				}} className={styles.detail}>
-					<img src='../img/btn_detail.png'/>
+					navigate(`${props.el.id}`,{
+						state: {genr : genr, type: props.type, detail: detail, 
+							similar : similar, person : person}});
+				}} onMouseDown={()=>{onColor()}} onMouseLeave={()=>{offColor()}} style ={{backgroundColor:btncolor}} className={styles.detail}>
+					<img src={process.env.PUBLIC_URL + '/img/btn_detail.png'}/>
 				</div>
 			</div>	
-					
+
 			<ul className={styles.genres}>
 				{genr.map((el,idx)=>{
 					return(

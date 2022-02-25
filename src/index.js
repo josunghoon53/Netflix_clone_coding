@@ -16,15 +16,6 @@ const store = createStore(rootReducer,
   compose(applyMiddleware(sagaMiddleware)))
   sagaMiddleware.run(rootSaga);
 
-
-document.cookie = 'safeCookie1=foo;SameSite=None;Secure';
-document.cookie = 'safeCookie2=foo;SameSite=None;Secure';
-document.cookie = 'crossCookie=bar;SameSite=None;Secure';
-
-
-
-
-
 ReactDOM.render(
   <BrowserRouter>
     <Provider store = {store}>

@@ -1,6 +1,7 @@
 .main{
 	background-color: rgb(20, 21, 21);
 	width: 100%;
+	height: 200vh;
 }
 
 //헤더
@@ -27,6 +28,9 @@ header {
 			width: 100%;
 			height: 100%;
 		}
+		img:hover{
+			cursor: pointer;
+		}
 	}
 
 	.menu {
@@ -39,6 +43,10 @@ header {
 
 		li {
 			margin-right: 20px;
+		}
+
+		li:hover {
+			cursor: pointer;
 		}
 	}
 
@@ -53,42 +61,12 @@ header {
 	}
 }
 
-//크기축소시 메뉴모달창 
-.menu_modal {
-	position: absolute;
-
-	z-index: 100;
-	background-color: rgba(0, 0, 0, 0.878);
-	top: 50px;
-	left: 30px;
-	width: 250px;
-	height: auto;
-	border-radius: 7px;
-
-	div {
-		display: flex;
-		flex-direction: column;
-		padding: 20px 0;
-		color: rgb(165, 165, 165);
-		width: 100%;
-		align-items: center;
-
-		p{
-			margin: 0;
-		}
-	}
-
-	div:hover {
-		cursor: pointer;
-		background-color: rgba(63, 63, 63, 0.522);
-		color: white;
-	}
-}
 
 
 section {
-	height: 200vh;
+	background-color: rgb(20, 21, 21);
 	overflow: hidden;
+
 }
 
 
@@ -111,4 +89,6 @@ section {
 	}
 	
 }
+
+
 

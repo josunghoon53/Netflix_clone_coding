@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import reactDom from "react-dom";
 
 const ModalPotal = ({children})=>{

@@ -3,7 +3,7 @@ import styles from  '../styles/Slide.module.scss';
 import HoverCard from './HoverCard';
 import {movieData } from '../Api';
 import { useDispatch, useSelector } from 'react-redux';
-import video from '../reducers/video';
+
 
 function Slide(props) {
 
@@ -30,55 +30,50 @@ function Slide(props) {
 
 	const [zindex,setzindex] = useState(); 
 	const [timer,settimer] = useState();
-
-	let video  =  useSelector((state)=> state.video);
-	const dispatch = useDispatch();
 	const li = useRef();
 	const ul = useRef();
 	const box = useRef();
+	const dispatch = useDispatch();
 
-	const [Category,setCategory] = useState(['지금 인기 있는 영화','한국tv프로그램','해외영화'])
+	const item = useSelector((state)=> {
+		if(props.type == 1) {
+			if(props.data == `${'sort_by=popularity.desc'}`) {
+				return state.m_genres.popular
+			}
+			if(props.data == `${'with_genres=28,53'}`) {
+				return state.m_genres.action
+			}
+			if(props.data == `${'with_original_language=ko'}`) {
+				return state.m_genres.korea
+			}
+			if(props.data == `${'with_genres=16'}`) {
+				return state.m_genres.animation
+			}
+		} 
+		
+		else {
+			if(props.data == `${'with_original_language=ko'}`) {
+				return state.t_genres.korea
+			}
+		}
+	
+	});
 
-	
-	
+	const genre = useSelector((state)=>{
+		if(props.type == 1) {
+			return state.movie.genreInfo
+		} else {
+			return state.tv.genreInfo
+		}
+	})
+
+						
+	/*브라우저 크기에 따른 슬라이드 갯수 조정*/
 	useEffect(()=>{
 		resizeFuc();
 		window.addEventListener('resize',resizeFuc);
 		return ()=> window.removeEventListener('resize',resizeFuc);
 	})
-
-	useEffect(()=>{
-		setlicount([...props.movie])
-		if(props.movie.length <= slideCnt){
-			setnewli([...props.movie]);
-		} else {
-			setnewli([...props.movie,...props.movie,...props.movie]);
-		}
-		
-	},[props.movie])
-
-	useEffect(()=>{
-		if(props.movie.length <= slideCnt){
-			setnewli([...props.movie]);
-		} else {
-			setnewli([...props.movie,...props.movie,...props.movie]);
-		}
-		
-	},[slideCnt])
-
-	useEffect(()=>{
-		setTimeout(()=>{
-			if(moslide < 0 && moslide > -33.3333){
-				setmoslide(moslide-33.3333);
-			}
-
-			if(moslide <= -66.6666) {
-				setmoslide(moslide+33.3333)
-			}
-		},700)
-	},[moslide])
-
-
 
 	const resizeFuc = ()=>{
 		if(window.innerWidth>=1400) {
@@ -119,6 +114,40 @@ function Slide(props) {
 		}
 	}
 	
+	/*------------------------------------- */
+
+
+	useEffect(()=>{
+		props.type == 1
+		?	dispatch({type: 'movie/MOVIE_REQUEST',url:props.data})
+		: dispatch({type: 'tv/TV_REQUEST',url:props.data});
+	},[dispatch])
+
+
+	/*-------슬라이드 복제여부---------------*/
+	useEffect(()=>{
+		setlicount([...item])
+		if(item.length <= slideCnt){
+			setnewli([...item]);
+		} else {
+			setnewli([...item,...item,...item]);
+		}
+	},[item,slideCnt])
+	/*------------------------------------- */
+
+
+	/*----------슬라이드 좌_우_이동-----------*/
+	useEffect(()=>{
+		setTimeout(()=>{
+			if(moslide < 0 && moslide > -33.3333){
+				setmoslide(moslide-33.3333);
+			}
+			if(moslide <= -66.6666) {
+				setmoslide(moslide+33.3333)
+			}
+		},700)
+	},[moslide])
+
 	const moveslide = (move,dir) =>{
 		if(slideOn === 0) {
 
@@ -164,19 +193,19 @@ function Slide(props) {
 		}
 		
 	}
-
+	/*------------------------------------- */
 
 	return (
 		<div style={{zIndex:`${zindex}`}} onMouseEnter={()=>{setallsee(1)}} onMouseLeave={()=>{setallsee(0)}} className={styles.slide_comp}>
-			<h2 onClick={()=>{console.log(props.movie)}} className={styles.title_container}>
+			<h2 className={styles.title_container}>
 				<div onMouseEnter={()=>{setallseetitle(1)}} onMouseLeave={()=>{setallseetitle(0)}} 
-					className={styles.title}>{Category[props.type-1]}
+					className={styles.title}>{props.title}
 					{allsee == 0 ? null 
 					:<div className={styles.allsee}>
 						{allseetitle == 0 ? null :
 						<div className={styles.allseetitle}>모두보기</div> 
 						}
-						<div className={styles.allseearrow}><img src='../img/right.png'/></div>
+						<div className={styles.allseearrow}><img src={process.env.PUBLIC_URL+'/img/right.png'}/></div>
 					</div>}
 				</div>
 					
@@ -216,36 +245,32 @@ function Slide(props) {
 											{hovcard == idx+1 ? 
 											<HoverCard
 											type = {props.type}
-											video = {video}
 											setdetailcard={props.setdetailcard}
-											genre={props.genre} slideCnt = {slideCnt}
+											genre={genre} slideCnt = {slideCnt}
 											current={current} licount={licount} el={el} /> : null}
 										</div>	
 								</li>
 							)
 						})}
-					</ul>
-
-					
+					</ul>		
 				</div>
 				<div className={styles.arrow_box}>
-					
 					{arrowbtn === false || btnhidden===0 ? null 
 					:	<span onClick={()=>{
 							moveslide(100/newli.length,'left')
 							}} className={styles.left}>
-							<img className={arrowon===0? styles.img_hidden:null} src='../img/left.png'/>
+							<img className={arrowon===0? styles.img_hidden:null} src={process.env.PUBLIC_URL+'/img/left.png'}/>
 						</span>
 					}
 
-					{btnhidden ===0 ?null :
+					{btnhidden ===0 ? null :
 						<span onClick={(()=>{
 							setarrowbtn(true)
 							moveslide(-100/newli.length,'right')
 							})}  className={styles.right}>
-							<img className={arrowon===0?styles.img_hidden:null} src='../img/right.png'/>
+							<img className={arrowon===0?styles.img_hidden:null} src={process.env.PUBLIC_URL+'/img/right.png'}/>
 						</span>	
-					 }
+					}
 				</div>
 			</div>	
 		</div>

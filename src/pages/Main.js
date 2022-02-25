@@ -2,127 +2,104 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from  '../styles/Main.module.scss';
 import Slide from '../component/Slide';
-import { useDispatch, useSelector } from 'react-redux';
+import SlideData from '../component/SlideData';
+import {useDispatch} from 'react-redux';
 import DetailCard from '../component/DetailCard';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import {Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import Header from '../component/Header';
+
+
 
 function Main(props) {
 
-	const [scrolly,setscrolly] = useState(0);
-	const [resize,setResize] = useState(100);
-	const [menulist,setMenulist] = useState(['홈','시리즈','영화','내가 찜한 콘텐츠'])
-	const[modalOn,setModalOn] = useState(true);
+	const [resize_shadow,setResize_shadow] = useState(100);
 	const [detailcard,setdetailcard] = useState(false);
-	const [el,setel] = useState([])
-
+	const [scrolly,setscrolly] = useState(0)
+	const navigate  = useNavigate();
   const dispatch = useDispatch();
 	const main =useRef();
-	const section = useRef();
 	const header =useRef();
+	const url = useLocation();
 
-	let movie  =  useSelector((state)=> state.movie.movieInfo);
-	let genre =  useSelector((state)=> state.movie.genreInfo);
-	let tv  =  useSelector((state)=> state.tv);
 
 	
-	let tv_genre  =  useSelector((state)=> state.tv_genre);
+	/*-----------------리사이즈-----------------*/
 
-
-
-
-
-  useEffect(()=>{
-
-    dispatch({type: 'movie/MOVIE_REQUEST'});
-
-	
-		dispatch({type:'tv/GENRES_REQUEST'})
-		dispatch({type: 'tv/TV_REQUEST',payload :1});
-		dispatch({type: 'tv/TV_REQUEST',payload :2});
-		dispatch({type: 'tv/TV_REQUEST',payload :3});
-  },[])
+	const resizeFuc=()=>{
+		setResize_shadow(window.innerWidth/9.38);
+	}
 
 	useEffect(()=>{
-		if(window.innerWidth>=885){
-			setModalOn(true)
-		}
- 		resizeFuc();
-		window.addEventListener("scroll",ScrollFuc);
-		window.addEventListener("resize",resizeFuc);
+		window.addEventListener("resize",()=>{
+			setResize_shadow(window.innerWidth/9.38);
+		});
 		return() =>{
-			window.removeEventListener("scroll",ScrollFuc);
 			window.removeEventListener("resize",resizeFuc);
-			
 		};
 	})
 
+  /*-------------------------------------------*/
 
-	useEffect(()=>{
-		if(scrolly !== 0)
-		header.current.style = `
-			top : 0px;
-			position : fixed;
-			background-color : black;
-			transition: 1s ease-in-out;
-		`
-		return(()=>{
-			header.current.style = `
-		`
-		})
-	})
-	
 
-	const resizeFuc=()=>{
-		setResize(window.innerWidth/9.38);
+	const Jumbo = ()=>{
+		return(
+			<div className={styles.jumbo}>
+				<img src={process.env.PUBLIC_URL + '/img/test.jpg'}/>
+				<div style={{height:`${resize_shadow}px`}} className={styles.shadow}/>
+			</div>
+		)
 	}
 
-	const ScrollFuc=()=>{
-		detailcard == false	
-		? setscrolly(window.scrollY)
-		: setscrolly(scrolly)
+
+	const SlideCategory = (el,idx) =>{
+		/*----------------전체_카테고리_슬라이드----------------*/
+		if(url.pathname.includes('type')==false)
+		return(
+			<Slide key = {idx} type = {el.type} order = {el.id} title = {el.title}
+			setdetailcard = {setdetailcard} data = {el.url}/>
+		)
+
+
+		/*----------------영화_카테고리_슬라이드----------------*/
+		if(url.pathname.includes('type/1')==true && el.type == 1)
+		return(
+			<Slide key = {idx} type = {el.type} order = {el.id} title = {el.title}
+			setdetailcard = {setdetailcard} data = {el.url}/>
+		)
+
+
+		/*----------------TV_카테고리_슬라이드------------------*/
+		if(url.pathname.includes('type/2')==true && el.type == 2)
+		return(
+			<Slide key = {idx} type = {el.type} order = {el.id} title = {el.title}
+			setdetailcard = {setdetailcard} data = {el.url}/>
+		)
 	}
 
-	
 
 	return(
 		
-		<div ref={main} className={styles.main}>
+		<div ref={main} className={styles.main}>		
+
+			{/*상세화면모달창*/}
 			<Routes>
   			<Route path=":id" element={<DetailCard
-				 section = {section}
-				 resize = {resize}
-				 detailcard = {detailcard}
-				 setdetailcard = {setdetailcard}
-				 scrolly = {scrolly}
+				 setdetailcard = {setdetailcard} scrolly = {scrolly}
 				 setscrolly = {setscrolly} main={main} />}/>
 			</Routes>
-			{modalOn === true ? null : <MenuModal menulist={menulist}/>}
-			<header ref={header}>
-				<div className={styles.title}>
-					<img src='../img/Netflix_Logo_RGB.png'/>
-				</div>
-				{window.innerWidth < 885 
-				?<div onClick={()=>{setModalOn(!modalOn)}} className={styles.menubtn}>메뉴
-				</div>
-				:<ul className={styles.menu}>
-					{menulist.map((el,idx)=>{
-						return(
-							<li key={idx}>{el}</li>
-						)
-					})}
-				</ul>
-				}
-			</header>
+
+			{/*헤더부분*/}
+			<Header setdetailcard = {setdetailcard} detailcard = {detailcard} 
+			setscrolly = {setscrolly} scrolly = {scrolly}/>
+
+			{/*세션부분*/}
 			<section>
-				<div className={styles.jumbo}>
-					<img src='../img/test.jpg'/>
-					<div style={{height:`${resize}px`}} className={styles.shadow}/>
-				</div>
-				<div>
-				<Slide type = {1} setdetailcard={setdetailcard} genre = {genre}  movie = {movie}/>
-				<Slide type = {2} setdetailcard={setdetailcard} genre = {genre}  movie = {tv}/>
-			
-				</div>
+				<Jumbo/>
+				<>
+					{SlideData.map((el,idx)=>(
+						SlideCategory(el,idx)
+					))}
+				</>
 			</section>
 		</div>
 
@@ -130,18 +107,5 @@ function Main(props) {
 
 }
 
-function MenuModal(props) {
-	return (
-		<div  className={styles.menu_modal}>
-			{props.menulist.map((el,idx)=>{
-				return(
-					<div key={idx}>
-						<p>{el}</p>
-					</div>
-				)
-			})}
-		</div>
-	)
-}
 
 export default Main

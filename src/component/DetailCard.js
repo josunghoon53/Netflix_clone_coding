@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useRef, useState} from 'react'
+import {useEffect,useRef, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -9,32 +9,21 @@ import styles from '../styles/Detailcard.module.scss'
 function DetailCard (props) {
 
 	const location = useLocation();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	 
+	//호버한 이미지 클릭시 데이터 navigate로 전달
 	const {genr} = location.state;
 	const {type} = location.state;
+	const {detail} = location.state;
+	const {similar} = location.state;
+	const {person} = location.state;
 	const {id} = useParams();
-	const dispatch = useDispatch();
+
+
 	const background = useRef();
 	const modal = useRef();
 
-	const navigate = useNavigate();
-	 
-
-	let detail = useSelector((state)=> 
-		type == 1? state.movie.detailInfo : state.tv_detail
-	);
-
-
-	let person = useSelector((state)=> 
-		type == 1? state.movie.personInfo : state.tv_person
-	);
-
-	
-
-	let similar = useSelector((state)=> 
-		type == 1? state.movie.similarInfo : state.tv_similar
-	);
-
-	
 
 
 	const outclick = (e)=>{
@@ -43,7 +32,7 @@ function DetailCard (props) {
 			const scrollY = props.main.current.style.top;
 			props.main.current.style.cssText= ``	
 			window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-			navigate('/Main');
+			navigate(-1);
 		}
 	}
 
@@ -54,13 +43,13 @@ function DetailCard (props) {
 		overflow-y: scroll;
 		position : fixed;
 		width: 100vw;
-		height:${window.innerHeight}vw`;
+		height:${modal.current.clientHeight}px`;
 		props.setdetailcard(true)
 		props.setscrolly(window.scrollY)
 		window.scrollTo(0,0)
 		return ()=>{
 			props.main.current.style.cssText= `
-			position:static;`	
+			position:relative;`;	
 		}
 	},[])
 
@@ -69,21 +58,21 @@ function DetailCard (props) {
 		dispatch({type:'movie/UNIT_REQUEST', payload : id})
 		}
 		else if(type == 2) {
-		dispatch({type:'tv/DETAIL_REQUEST', payload : id})
-		dispatch({type:'tv/PERSON_REQUEST', payload : id})
-		dispatch({type:'tv/SIMILAR_REQUEST', payload : id})
+			dispatch({type:'tv/UNIT_REQUEST', payload : id})
 		}
 	},[])
 
 
-
+	useEffect(()=>{
+		console.log(modal.current.clientHeight)
+	},[])
+	
 
 
 	return(
 		<ModalPotal>
 			<div ref={background} onClick={(e)=>{outclick(e.target)}} className={styles.background}/>
-			<div 
-			className={styles.modalContainer}>
+			<div ref={modal} className={styles.modalContainer}>
 				<div className={styles.imgWrapper}>
 					<img className={styles.backdrop} src={`https://image.tmdb.org/t/p/w500${detail.backdrop_path}`}/>
 					<div className={styles.shadow}/>
@@ -92,14 +81,14 @@ function DetailCard (props) {
 					<div className={styles.title}>{type == 1 ? detail.title : detail.name}</div>
 		
 					<div className={styles.infoBox}>
-							<div className={styles.date}>개봉날짜 : {type  ==1 ?detail.release_date : detail.first_air_date}</div>
+							<div className={styles.date}>개봉날짜 : {type  == 1 ?detail.release_date : detail.first_air_date}</div>
 							<div className={styles.time}>상영시간 :{detail.runtime}분</div>
 					</div>
 					
 
 					<div className= {styles.infoContainer}>
 						<div onClick={(()=>{
-							console.log(person)
+	
 						})} className={styles.overview}>
 							{detail.overview}
 						</div>
