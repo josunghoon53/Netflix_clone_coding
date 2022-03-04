@@ -1,0 +1,52 @@
+$basic_color :  rgb(20, 21, 21);
+
+.Main {
+  background-color: $basic_color;
+  min-height: 100vh;
+  height: 200vh;
+  overflow: hidden;
+  padding-bottom: 200px;
+  width: 100%;
+  position: relative;
+}
+
+header {
+  position: fixed;
+  height: 60px;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+	background: linear-gradient(to bottom,rgba(0, 0, 0, 0.782),transparent);
+	transition: 1s ease-in-out;
+  img {
+    position: absolute;
+    width: 80px;
+    left: 1vw;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+section {
+  .jumboContainer {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+    img {
+      width: 100%;
+    }
+    .shadow{
+      content: '';
+      background: linear-gradient(to top,rgb(20, 21, 21),transparent);
+      position: absolute;
+      bottom: 0;
+      height: 100px;
+      width: 100%;
+    }
+  }
+}
+
+.content {
+  height: 100%;
+  
+}
