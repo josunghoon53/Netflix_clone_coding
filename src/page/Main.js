@@ -4,7 +4,7 @@ import Header from '../component/Header';
 import Jumbo from '../component/Jumbo';
 import Slide from '../component/Slide';
 
-const Main = ()=>{
+const Main = (props)=>{
 
 
 
@@ -15,8 +15,7 @@ const Main = ()=>{
 				<section>
 					<Jumbo/>
 					<div className={style.content}>
-						<Slide/>
-
+						<Slide test = {props.test} setModal = {props.setModal}/>
 					</div>
 				</section>
 			</div>

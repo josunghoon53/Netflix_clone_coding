@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 
 
-
 export const useResize = () =>{
 
 	const [state,setState] = useState({
@@ -10,13 +9,12 @@ export const useResize = () =>{
 	});
 
 	const resizeFuc = () =>{
+
 		setState({
 			w : window.innerWidth,
 			h : window.innerHeight
 		});
 	}
-
-
 
 	useEffect(()=>{
 		window.addEventListener('resize',resizeFuc);

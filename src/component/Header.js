@@ -4,9 +4,7 @@ import { useScroll } from "../customHook/useScroll";
 
 const Header = (props)=>{
 
-	const header = useRef();
 	const {y} = useScroll();
-
 
 	return(
 		<header style={{backgroundColor:`${y!==0?'black':''}`}}>

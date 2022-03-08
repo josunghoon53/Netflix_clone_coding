@@ -1,0 +1,10 @@
+$basic_color :  rgb(20, 21, 21);
+
+
+.modal_container {
+	background-color: $basic_color;
+	animation: zoom 1s ease forwards;
+	box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.741);
+}
+
+
