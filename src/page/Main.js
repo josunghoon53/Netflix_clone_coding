@@ -5,9 +5,6 @@ import Jumbo from '../component/Jumbo';
 import Slide from '../component/Slide';
 
 const Main = (props)=>{
-
-
-
 	return(
 		<div className={style.Main}>
 			<div className={style.contentWrap}>
@@ -15,7 +12,7 @@ const Main = (props)=>{
 				<section>
 					<Jumbo/>
 					<div className={style.content}>
-						<Slide test = {props.test} setModal = {props.setModal}/>
+						<Slide setData = {props.setData} test = {props.test} setModal = {props.setModal}/>
 					</div>
 				</section>
 			</div>

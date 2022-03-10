@@ -35,8 +35,15 @@ const Slide = (props) =>{
 	
 		setliwidth(100/slideCnt);
 		setulwidth(slideitem.length * liwidth)
+		if(slideitem.length < 6 && slideCnt <= 6 ) {
+			setulwidth(slideCnt * liwidth)
+			ul.current.style.transform = 'translateX(0px)' 
+		}
 		setBarCnt(Math.ceil(props.test.length/slideCnt));
 	})
+
+
+
 
 	// 슬라이드 복제 여부
 	useEffect(()=>{
@@ -127,6 +134,7 @@ const Slide = (props) =>{
 	}
 
 	const loc = (e,cnt,idx,el) =>{
+		props.setModal(true)
 		dispatch({type : 'coorvalue/COORDI_SET', payload : {
 			top 	: e.getBoundingClientRect().y + window.pageYOffset,
 			left	:	e.getBoundingClientRect().left,
@@ -157,10 +165,11 @@ const Slide = (props) =>{
 						{slideitem.map((el,idx)=>{
 							return(
 								<li style={{width:`${liwidth}%`}} className={style.slide_card} key={idx}>
-									<div onMouseEnter={(e)=>{setTimer(setTimeout(()=>{loc(e.target,slideCnt,idx,el)},1000))}} 
+									<div onMouseEnter={(e)=>{props.setData(el)
+										setTimer(setTimeout(()=>{loc(e.target,slideCnt,idx,el)},500))}} 
 											 onMouseLeave={()=>{clearTimeout(timer)}}
 										className={style.img_wrapper}>
-										<img className={style.slide_img} src={`./test/${el}`}/>
+										<img className={style.slide_img} src={`./test/${el}.jpg`}/>
 									</div>
 								</li>
 							)})}

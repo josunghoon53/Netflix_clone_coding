@@ -6,15 +6,15 @@ import Main from "./Main"
 const App  = ()=>{
 
   const [modal,setModal] = useState(false);
-  const [full,setFull] = useState(false);
-  
   const [test,settest] = 
-	useState(['test1.jpg','test2.jpg','test3.jpg','test4.jpg','test5.jpg','test6.jpg','test3.jpg'])
+	useState(['test1','test2','test3','test4','test5'])
+
+  const [data,setData] = useState();
 
   return(
     <>
-      <Main  test={test}/>
-      <Modal test={test}/> 
+      <Main setModal = {setModal}  test={test} setData={setData}/>
+      {modal ? <Modal data= {data} modal = {modal} setModal = {setModal} test={test}/> : null} 
     </>
   )
 }

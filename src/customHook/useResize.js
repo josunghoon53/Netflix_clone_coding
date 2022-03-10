@@ -17,6 +17,7 @@ export const useResize = () =>{
 	}
 
 	useEffect(()=>{
+		resizeFuc()
 		window.addEventListener('resize',resizeFuc);
 		return () => window.removeEventListener('resize',resizeFuc);
 	},[])
